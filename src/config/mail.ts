@@ -1,5 +1,3 @@
-import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
-
 interface IMailConfig {
   driver: 'ethereal' | 'ses';
 

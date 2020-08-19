@@ -42,4 +42,40 @@ describe('ListProviders', () => {
 
     expect(providers).toEqual([user1, user2]);
   });
+
+  it('should be able to retrieve providers from cache', async () => {
+    const findAllProviders = jest.spyOn(
+      fakeUsersRepository,
+      'findAllProviders',
+    );
+
+    await fakeUsersRepository.create({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: '123456',
+    });
+
+    await fakeUsersRepository.create({
+      name: 'John Qua',
+      email: 'johnqua@example.com',
+      password: '123456',
+    });
+
+    const loggedUser = await fakeUsersRepository.create({
+      name: '',
+      email: '',
+      password: '',
+    });
+
+    const providers = await listProviders.execute({
+      user_id: loggedUser.id,
+    });
+
+    const cachedProviders = await listProviders.execute({
+      user_id: loggedUser.id,
+    });
+
+    expect(providers).toEqual(cachedProviders);
+    expect(findAllProviders).toHaveBeenCalledTimes(1);
+  });
 });

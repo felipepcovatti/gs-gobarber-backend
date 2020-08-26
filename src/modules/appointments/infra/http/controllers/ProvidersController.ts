@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import ListProvidersService from '@modules/appointments/services/ListProvidersService';
+import { classToClass } from 'class-transformer';
 
 class ProvidersController {
   async index(request: Request, response: Response): Promise<Response> {
@@ -9,11 +10,7 @@ class ProvidersController {
 
     const providers = await listProviders.execute({ user_id });
 
-    const providersWithoutPassword = providers.map(({ password, ...rest }) => ({
-      ...rest,
-    }));
-
-    return response.json(providersWithoutPassword);
+    return response.json(classToClass(providers));
   }
 }
 
